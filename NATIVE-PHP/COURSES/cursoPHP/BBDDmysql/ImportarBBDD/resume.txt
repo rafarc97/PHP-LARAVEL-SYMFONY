@@ -1,0 +1,13 @@
+	Tenemos dos formas de importar tablas en nuestra BBDD:
+        Una es importando un archivo excel (ya exportado ese mismo
+        a .ods con google drive por ejemplo), en el que tendremos que
+        tener en cuenta si la primera fila de nuestro excel son ya datos
+        de la propia tabla o si corresponde a los titulos de las
+        columnas, para saber si marcar la casilla en phpymyadmin o no
+        antes de importarlo.
+        La otra forma es creando en un bloc de notas las instrucciones
+        sql de create table... y luego las de insert into table...
+        Este archivo del bloc de ntoas deberá guardarse como un .sql 
+        para que al importarle en phpmyadmin lo traduzca como tal.   
+
+        Esto nos sirve para migrar datos (TABLAS) de una BBDD a otra 

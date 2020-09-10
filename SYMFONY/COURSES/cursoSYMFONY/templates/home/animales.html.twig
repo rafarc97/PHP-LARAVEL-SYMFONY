@@ -1,0 +1,78 @@
+{% extends 'layouts/master.html.twig' %}
+
+{% block cabecera %}
+    {# Para mostrar tanto el contenido de la plantilla master como el añadido aquñi por nosotros #}
+    {{parent()}}
+    <h1>Cabecera por defecto cambiado</h1>
+{% endblock %}
+
+{% block contenido %}
+    <hr>
+
+    <h1>{{title}}</h1>
+    <h2>Tu nombre es: {{nombre}}</h2>
+    <h2>Tus apellidos son: {{apellidos}}</h2>
+
+    <hr>
+
+    {# Crear variables en twig #}
+    {% set perro = 'American Stanford' %}
+    <h4>{{perro}}</h4>
+
+    {# Arrays en twig #}
+
+    {# Como var_dump en laravel #}
+    {{dump(animales)}}
+
+    {{animales[2]}}
+    
+    <br>
+
+    {# Arrays asociativos #}
+    {{dump(aves)}}
+
+    {{'Raza: ' ~ aves.raza ~ ' Edad ' ~ aves.edad }}
+
+
+    {# CONDICIONALES #}
+    {% if aves.tipo == 'periquito' %}
+        <h1>Cuidado con el periquito</h1>
+    {% else %}
+        <h2>No hay periquitos a la vista</h2>
+    {% endif %}
+
+
+
+    {# BUCLES #}
+    {# |lenght es similar al count en php #}
+    {% if animales|length >= 1 %}
+        <ul>
+            {% for animal in animales %}
+                <li>
+                    {{animal}}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% for i in 0..10 %}
+        {{i}}<br>
+    {% endfor %}
+
+
+    {# starts y ends #}
+    {% if aves.color starts with 'az' %}
+        <h1>Empieza por az</h1>
+    {% endif %}
+
+    {% if aves.color ends with 'so' %}
+        <h1>Acaba por so</h1>
+    {% endif %}
+
+    <br>
+    <hr>
+    <br>
+
+    {{ include('partials/funciones.html.twig')}}
+
+{% endblock %}

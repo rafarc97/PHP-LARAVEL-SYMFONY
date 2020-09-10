@@ -1,0 +1,60 @@
+{# FUNCIONES PREDEFINIDAS (+ EN LA DOCUMENTACION OFICIAL DE TWIG) #}
+    {{ min( [9,11,6,99,2] )}}
+
+    <br>
+
+    {{ max( [9,11,6,99,2] )}}
+
+    <br>
+
+    {{ random(animales) }}
+
+    <br>
+
+    {% for i in range(0,20) %}
+
+        {{i}} <br>
+
+    {% endfor %}
+
+    <br>
+
+    {# saltos de 2 en 2 #}
+    {% for i in range(0,20,2) %}
+        {{i}} <br>
+    {% endfor %}
+
+    <br>
+
+<h1>Filtros</h1>
+{{animales|length}}
+
+<br>
+
+{% set email = '   email@email.com    ' %}
+
+{{dump(email)}}
+{{dump(email|trim)}} {# elimina espacions #}
+{{dump(email|trim|upper)}}
+{{dump(email|trim|upper|lower)}}
+
+
+
+<h1>Extensiones personalizadas</h1>
+
+{# Usandolo como FUNCIÓN #}
+
+{# No formatea el html #}
+{{multiplicar_function(5)}}
+
+{# Para formatear el html #}
+{{multiplicar_function(2)|raw}}
+
+{# usándolo como FILTRO #}
+
+{# No formatea el html #}
+{{12|multiplicar_filter}}
+
+{# Para formatear el html #}
+{{12|multiplicar_filter|raw}}
+<br><br>

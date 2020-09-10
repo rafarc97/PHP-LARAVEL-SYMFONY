@@ -1,0 +1,24 @@
+1º
+Creamos la senenctial SQL sustituyendo los valores de criterio por el símbolo ?
+Ej: $sql = "SELECT * from usuarios WHERE user = ? AND password = ?;
+
+2º 
+Preparamos la consulta con la función mysqli_prepare(), la cual requiere dos parámetros: el objeto conexión
+y la sentencia sql.
+Ej: $results = mysqli_prepare($conexion, $sql). La función devuelve objeto de tipo mysqli_stmt.
+
+3º
+Unimos los parámetros a la sentencia sql. De esto se encarga la función mysqli_stmt_bind_param().
+Devuelve true o false. Esta función requiere 3 parámetros: el objeto mysqli_stmt (Devuelto por mysqli_prepare),
+el tipo de dato que se utilizará como criterio en sql, variable con criterio.
+
+4º
+Ejecutar la consulta con la función mysqli_stmt_execute(). Esta función devuelve true o false. Necesita
+como parámetro el objeto mysqli_stmt.
+
+5º
+Asociar variables al resultado de la consulta. Esto lo conseguimos con la función mysqli_stmt_bind_result().
+Devuelve true o false. Necesita como parámetros el objeto mysqli_stmt y tantas variables como columnas en consulta sql.
+
+6º
+Lectura de valores. Para ello utilizamos la función mysqli_stmt_fetch. Pide como parámetro el objeto mysqli_stmt.

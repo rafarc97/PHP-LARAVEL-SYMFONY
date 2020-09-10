@@ -1,0 +1,11 @@
+<h1>Formulario con Symfony</h1>
+
+
+{% for message in app.session.flashbag().get('message') %}
+    <strong> {{message}} </strong>
+{% endfor %}
+
+
+{{form_start(form)}} {# abrir el formulario #}
+{{form_widget(form)}} {# imprimir los campos #}
+{{form_end(form)}} {# cerrar el formulario #}

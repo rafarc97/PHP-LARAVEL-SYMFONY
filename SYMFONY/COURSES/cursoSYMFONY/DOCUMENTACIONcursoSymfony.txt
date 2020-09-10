@@ -1,0 +1,555 @@
+-----------------------
+|APUNTES CURSO SYNFONY|
+-----------------------
+
+
+---------------------------------------------
+|Autor: Rafael Rodríguez Calvente           |
+|Correo: rafaelrodriguezcalvente@gmail.com  |
+|Web: rafacalventeweb.com                   |
+---------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------
+|INSTALACIÓN SYMFONY|
+---------------------
+
+	Dos tipos de instalaciones:
+
+	- APP MONOLÍTICA: contiene las vistas, controladores y modelos e instala muchos + archivos.
+    		- composer create-project symfony/website-skeleton cursoSYMFONY
+
+	* Para instalar una versión concreta sería de esta forma:
+    		- composer create-project symfony/website-skeleton cursoSYMFONY ^5.1.*
+    
+	* Esta instalación no trae un paquete que nos permite lanzarla con el servidor apache, por lo tanto tenemos
+  	que descargalo nosotros. Entramos en cursoSymfony y ejecutamos: 
+    		- composer require symfony/apache-pack
+
+    
+	- APP REST:
+    		- composer create-project symfony/skeleton cursoSYMFONY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------
+|HOST VIRTUAL|
+--------------
+
+	- En el fichero C:\xampp\apache\conf\httpd.conf buscar "Virtual hosts" y
+    	comprobar que la línea inferior se encuentra descomentada
+    	- Entrar en C:\xampp\apache\conf\extra\httpd-vhosts.conf y copiamos al final:
+
+    	<VirtualHost *:80>
+        	DocumentRoot "C:/xampp/htdocs/"
+        	ServerName localhost
+    	</VirtualHost>
+    	<VirtualHost *:80>
+        	DocumentRoot "C:/xampp/htdocs/cursoSYMFONY/public"
+        	ServerName symfony.com.devel
+    	</VirtualHost>
+    	-Entrar en C:\Windows\System32\drivers\etc\hosts y añadir al final (por ejemplo):
+        	127.0.0.1 symfony.com.devel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------
+|ESTRUCTURA DIRECTORIOS|
+------------------------
+
+	bin/* : programas ejecutables de consola para pruebas unitarias o de consola
+
+	config/packages: configuración de distintos paquetes
+
+	config/dev o config/prod o config/test: configuración específica para desarrollo, produción o pruebas (tests)
+
+	config/routes: configuración de rutas (urls que podamos generar)
+
+	config/bundles.php: si tenemos que instalar algún bundle o paquete de symfony, de terceros o que nosotros desarrollemos
+	podemos añdirlos en ese archivo para poder usarlos
+
+	config/routes.yaml: similar al web.php en laravel (donde se definen todas las rutas de nuestra App)
+
+	confiug/services.yaml: configuración de servicios
+
+	public: carpeta de entrada al proyecto con el index.php (controlador frontal) y el .htaccess (permite configurar algunas cosas)
+
+	src: parte del código que principalmente tocamos y donde encontramos la carpeta Controller (van los controladores),
+	Entity(van los modelos y entidades), migrations (van las migracioness) y repository (van las clases de tipo repositorio
+	de consultas vinculadas a los modelos que nos permitirán programar + ordenadamente), el Kernel.php (para diferentes configuraciones)
+
+	template: donde tendremos las vistas
+
+	tests: para tests unitarios
+
+	translations: temas de traducciones
+
+	var: donde se guardan temas de caché y logs. Tendremos que ir borrando cosas de manera recurrente para solucionar problemas
+	que a veces podemos tener.
+
+	vendor: instalación de todos los paquetes y dependencias del proyecto
+
+	.env: para configuraciones de bases de datos (nos ahorra tener que hacer estos cambios dentro de la carpeta config)
+
+	composer.json: se especifican las versiones de los paquetes que tenemos entre otras cosas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------
+|COMANDOS GENERALES|
+-------------------
+
+	- php bin/console help (ayuda de comandos)
+	- php bin/console list (lista de comandos)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------
+|CONTROLADORES|
+---------------
+
+	Podemos generarlos manualmente o con la consola: 
+		- php bin/console make:controller HomeController
+
+	Tras esto se genera tanto el controlador como la vista correspondiente en .twig (motor de plantillas de Symfony),
+	puediendo directamente ya acceder a la url/home y acceder a la vista que se crea por defecto.
+
+	En el controlador tendremos:
+		use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; (clase padre de controladores)
+		use Symfony\Component\Routing\Annotation\Route; (para poder hacer la documentación de routing, es decir, poder
+		poner las siguientes 3 líneas de código y nos permita configurar la ruta:
+
+     		/**
+     		* @Route("/home", name="home")
+     		*/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------
+|RUTAS|
+-------
+
+	En Symfony podemos configurar las rutas de dos formas: a través del 
+	use Symfony\Component\Routing\Annotation\Route; (para poder hacer la documentación de routing, es decir, poder
+	poner las líneas de código mencionadas en el apartado anterior de este documento y así nos configure dicha ruta:
+
+ 	/**
+     	* @Route("/home", name="home")
+     	*/)
+
+	ó a través del formato .yaml configurando el config/routes.yaml
+
+ 	!!! LAS RUTAS EN EL .YAML tienen que tener la misma estructura que vienen como en el ejemplo por defecto (misma tabulación)
+
+	En el .yaml podemos indicarle methods: [POST,GET] con solo POST, solo GET o ambos.
+
+	requirements: 
+      		nombre: \w+ (indica que acepta para ese parámetro solo letras),
+		aunque también podemos indicarselo con expr. regulares (este método es + común)
+
+	Listar rutas de nuestro proyecto
+		- php bin/console debug:router
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------
+|TWIG |
+-------
+
+	Es el motor de plantillas de Symfony
+
+	- En twig para hacer un echo es igual que en blade, es decir con la notación {{}}
+
+	- Twig es + estricto que blade porque no podemos usar php dentro de twig
+
+	- Twig está hecha para trabajar con las vistas
+
+	- Incluye un sistema de herencias y un sistema de bloques donde podemos definir una plantilla maestra o layout para
+	poder aprovecharnos de esos bloques que hemos creado
+
+	Creamos en templates una carpeta de layouts para crear nuestras plantillas, en nuestro caso: master.html.twig
+
+	- Para realizar INCLUDES (para separar y reutilizar algunos códigos) en Twig creamos una carpeta partials en templates
+
+	- En twig tenemos FILTROS (pipes o tuberías) que nos permiten modificar el resultado de las variables. Es similar a usar funciones.
+
+	- Para crear nuestros propios FILTROS/FUNCIONES creamos una carpeta 'Twig' dentro de src, y luego desde la carpeta del proyecto
+	  ejecutamos: php bin/console make:twig-extension MiFiltro y se generará un archivo .php dentro de Twig en el cual se incluyen
+	  dos use: uno para poder crear funciones y otro para filtros. Una vez hayamos creado la/s funcion/es y o filtro/s, tenemos que configurar
+	  la carpeta de services.yaml. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------
+|BASES DE DATOS|
+----------------
+
+	Tenemos diferentes formas de trabajar con BD en Symfony:
+		- Doctrime ORM, 
+		- Query Builder (se usa generalmente para realizar consultas más complejas o concretas) 
+		- Lenguaje DQL
+		- Lenguaje SQL
+
+	Las bases de datos se configuran en el .env para que luego automaticamente symfony configure dentro de la carpeta config
+	estos datos cogiéndolos del .env. Tocaremos solo esta línea de la siguiente manera:
+
+	DATABASE_URL=mysql://root:@127.0.0.1:3306/cursoSymfony?serverVersion=5.7
+
+
+	Para trabajar con las BD tenemos que:
+		- Generar nuestra BD con sus tablas en phpmyadmin
+		- Generar los modelos en nuestra App
+
+	Podemos crearlo en el orden que queramos pero se hace de distinta forma:
+
+
+	
+	----------------
+	1ºBD, 2ºMODELO:
+	----------------
+	Generamos la BD en phpmyadmin (coge el nombre indicado en el .env para el nombre de la BD):
+		- php bin/console doctrine:database:create
+
+	Las tablas se pueden crear de forma programática desde consola o manualmente en phpmyadmin.
+	Ahora creamos la tabla animales desde phpmyadmin
+
+	Para generar las entidades (objetos dentro del propyecto que respresenten
+	los registros de la BD no es tan fácil como en Laravel que creamos un modelo y listo).
+
+	Como pasar nuestra tabla animales de la BD a entidades de doctrine en Symfony, para poder tener clases y generar
+	objetos que representen a cada uno de esos registros:
+	
+	1º: - php bin/console doctrine:mapping:convert --from-database yml .src/Entity (genera el Animales.orm.yml)
+	2º: - php bin/console doctrine:mapping:import App\\Entity annotation --path=src/Entity (genera el Animales.php, es decir la clase en sí)
+	3º: - php bin/console make:entity --regenerate App (genera los getters y setters del modelo)
+	* El comando anterior genera setters y getters de todos los modelos dentro de App, para especificar uno de ellos en concreto:
+		- php bin/console make:entity --regenerate App\\Entity\\Animal
+
+	* Hasta ahora tendríamos la entidad configurada en formato anotación, no en formato YML. Entonces borramos todos esos comentarios
+	de código de la clase Animales.php.
+
+	* Cambiamos el nombre de Animales.php a Animal.php porque cada objeto de esa clase representará un solo animal
+	* Dentro del Animales.orm.yml cambiamos la primera línea tb por Animal
+
+
+
+
+	-------------------
+	(1º MODELO, 2º BD):
+	-------------------
+
+	1º: - php bin/console make:entity Usuario (se crea la clase del archivo Usuario.php y también UsuarioRepositoy.php que es una clase
+	donde podremos almacenar consultas para no sobrecargar el controlador, es una buena práctica usarlo)
+	2º: Le añadimos las propiedades a la clase (en este caso usaremos el formato de comentarios en lugar del yml). Entonces 
+	nos queda así la clase: 
+
+		class Usuario
+		{
+			/**
+			* @ORM\Id
+			* @ORM\GeneratedValue
+			* @ORM\Column(type="integer")
+			*/
+			private $id;
+			/**
+			* @ORM\Column(type="string",length=255)
+			*/
+			private $nombre;
+			/**
+			* @ORM\Column(type="integer",length=255)
+			*/
+			private $apellidos;
+			/**
+			* @ORM\Column(type="integer",length=255)
+			*/
+			private $email;
+			/**
+			* @ORM\Column(type="integer",length=255)
+			*/
+			private $password;
+
+			public function getId(): ?int
+			{
+				return $this->id;
+			}
+		}
+
+3º: - php bin/console make:entity --regenerate App (para generar todos los setters y getters)
+
+4º: Generamos las tablas a partir de estas entidades ya creadas:
+ - php bin/console doctrine:migrations:diff (observa las diferencias entre mis entidades y la BD, por lo que genera una migración basándose
+ en lo que nos falta en la BD, p.ej si tuvieramos una entidad con una propiedad que la BD no tuviera esta la añadiría).
+ Ahora se abrá creado una migración dentro de la carpeta Migrations (donde aparecen líneas SQL para crear las cuales usará symfony
+ para con el siguiente comando crear la tabla en la BD).
+
+ 5º: - php bin/console doctrine:migrations:migrate (crea la tabla usuarios)
+ * si da error, ver: https://github.com/doctrine/DoctrineMigrationsBundle/issues/337
+
+
+
+----------------
+Creamos controlador para la BD animal
+- php bin/console make:controller AnimalController
+- creamos nuestra ruta en el routes.yaml y borramos los comentarios del controlador, esto genera
+una vista autoamticamente en templates/animal/index.html.twig
+- Para poder trabajar con la clase animal dentro de nuestro AnimalController introducimos: use App\Entity\Animal;
+
+Para hacer consultas de la Base de datos con doctrine:
+- php bin/console doctrine:query:sql "SELECT * FROM animales"
+
+
+
+----------------------
+Si quisieramos hacer una consulta con el query builder muy compleja y larga, entonces sería buena práctica
+hacer uso de la carpeta Respository que no es más que una clase donde se introducen todos los métodos que
+van a ejecutar consultas. Estos repositorios forman parte del modelo. LOS MODELOS EN SYMFONY ESTÁN FORMADOS
+POR LOS REPOSITORIOS Y LAS ENTIDADES. Las entidades nos provee las propiedades que trae por defecto y el repositorio
+nos permite añadir nuevos métodos que yo cree. Para ello tenemos que vincular la clase (entidad) al repositorio,
+nos vamos a Animal.php.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------
+|FORMULARIOS|
+-------------
+
+	Dos formas:
+	- La típica manera creando un formulario HTML y enviando los datos por GET/POST
+	- Usando el Create Form Builder dentro de los métodos de nuestro contorlador, de esta manera, los
+	formulario están vinculados a las entidades por lo que saben que campos añadir, para ello tenemos que importar:
+	/* FORMS */
+	use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+	use Symfony\Component\Form\Extension\Core\Type\TexType;
+	use Symfony\Component\HttpFoundation\Request;
+
+	Esta sería la construcción básica de un formulario:
+
+	$form = $this->createFormBuilder($animal)
+						->setAction($this->generateUrl('animal_save'))
+						->add('tipo',TextType::class)
+						->add('color',TextType::class)
+						->add('raza',TextType::class)
+						->add('submit',SubmitType::class)
+						->getForm();
+
+	ahora podríamos pasarle un array a cualquier campo add para añadirle personalizaciones, por ejemplo así: 
+
+	$form = $this->createFormBuilder($animal)
+						->setAction($this->generateUrl('animal_save'))
+						->add('tipo',TextType::class, [
+							'label' => 'Tipo de animal'
+						])
+						->add('color',TextType::class)
+						->add('raza',TextType::class)
+						->add('submit',SubmitType::class,[
+							'label' => 'Crear Animal',
+							'attr' => ['class' => 'btn btn-success']
+						])
+						->getForm();
+
+	Para las validaciones de formularios tenemos que introducir otra librería en el modelo Animal.php:
+	use Symfony\Component\Validator\Constraints as Assert;
+
+	Ahora añadimos a los comentarios de las propiedades del modelo lo siguiente:
+
+	/**
+		* @ORM\Column(type="string",length=255)
+		* @Assert\NotBlank
+		* @Assert\Regex("/[az-A-Z]+/")
+		*/
+
+	Para que no pueda llegar en blanco y tenga un patrón definido
+
+
+
+	- Normalmente los formularios grandes se suelen separar del archivo controlador, y se suele crear
+	dentro de src una carpeta Form donde irán los formularios de nuestro proyecto y se les suele poner
+	un nombre estandar: AnimalType.php
+
+	- Aparte de la validación del formulario tal cual, también puedo validar datos de manera aislada, es decir,
+	podemos crearnos un formulario en HTML y enviarlos a una ruta que los valide. Para validar usaremos una clase
+	dentro de: use Symfony\Component\Validator\Validation;
+	En nuestro ejemplo hemos probado con esta constrainst;: use Symfony\Component\Validator\Constraints\Email;
+	pero en la documentación de symfony podemos encontrar muchas más.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------
+|MEJORES SYMFONY 5 VS SYMFONY 4|
+--------------------------------
+
+	- Código de ambas versiones son totalmente compatibles
+	- Mejora en en rendimiento
+	- Nuevo componente Symfony Mailer (mejoras de seguridad a la hora de enviar emails)
+	- Nuevo componente Notifier (permite enviar notifiaciones al usuario)
+	- Mejoras en validacion de datos (nuevas restricciones y opciones)
+	- Mejoras en inyección de dependencias (ahoran es + sencillo)
+	- Mejoras con los comandos lint (son comandos que te permiten mejorar el código de plantillas y servicios)
+	- Integración php 7.4
+	- Correción de bugs
+	- Eliminan código marcado como deprecado
+	- No hay cambios de sintaxis relevantes

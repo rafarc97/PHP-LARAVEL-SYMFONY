@@ -1,0 +1,504 @@
+-----------------------
+|APUNTES CURSO LARAVEL|
+-----------------------
+
+
+---------------------------------------------
+|Autor: Rafael Rodríguez Calvente           |
+|Correo: rafaelrodriguezcalvente@gmail.com  |
+|Web: rafacalventeweb.com                   |
+---------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------
+|PÁGINA INICIO LARAVEL|
+----------------------
+
+    - C:\xampp\htdocs\cursoLARAVEL\public
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------
+|INSTALACIÓN EXTENSIONES LARAVEL CON WAMP|
+------------------------------------------
+
+    - Ir a ruta: C:\wampp\php\ext
+    - Ir a dlldownloader.com
+    - Descargar tokenizr
+    - Descargar ctype
+    - Descargar json (en originaldll.com)
+    - Mover ficheros .dll a dicha ruta
+    - Abrimos php.ini ubicado en la ruta C:\wampp\php y añadimos las extensiones
+    en el apartado correspondiente (eliminando las ';' que aparecen en las otras
+    extensiones) quedando de la siguiente manera:
+
+        extension=php_tokenizer
+        extension=php_ctype
+        extension=php_json
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------
+|CREACIÓN HOST VIRTUAL XAMPP|
+-----------------------------
+
+    - En el fichero C:\xampp\apache\conf\httpd.conf buscar "Virtual hosts" y
+    comprobar que la línea inferior se encuentra descomentada
+    - Entrar en C:\xampp\apache\conf\extra\httpd-vhosts.conf y copiamos al final:
+
+    <VirtualHost *:80>
+        DocumentRoot "C:/xampp/htdocs/"
+        ServerName localhost
+    </VirtualHost>
+    <VirtualHost *:80>
+        DocumentRoot "C:/xampp/htdocs/cursoLARAVEL/public"
+        ServerName laravel.com.devel
+    </VirtualHost>
+    -Entrar en C:\Windows\System32\drivers\etc\hosts y añadir al final (por ejemplo):
+        127.0.0.1 laravel.com.devel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------
+|ESTRUCTURA DIRECTORIOS LARAVEL|
+--------------------------------
+
+    app: contenido y código principal de la App
+    app/Http: contiene los controladores y los modelos
+
+    bootstrap: lo trae por defecto integrado
+
+    config: archivos principales de configuración de la App (config de vistas, providers, ...)
+
+    database: contiene las migraciones (permiten versionar los cambios que iremos haciendo en la BD)
+    y los seeders (permiten rellenar nuestras BD de manera programática)
+
+    public: contiene los archivos publicos como los assets, el index.php (archivo de arranque)
+
+    resource: contiene las vistas de la App
+
+    routes:contiene las rutas de la App
+    routes/web.php: donde se indican todas las rutas de la App
+
+    storage: permite almacenar archivos
+
+    tests: permite realizar test unitarios
+
+    vendor: almacena todas las librerías, paquetes y dependencias con composer
+    vendor/.env: configuraciones con la BD
+    vendor/.gitignore: para ignorar determinados directorios y no se comiteen
+    vendor/artisan: intérprete de comandos de la consola para administrar nuestro proyecto Laravel
+    vendor/composer.json: configuración de dependencias y versiones
+    vendor/package.json: dependencias de Javascript si fuera necesario
+    vendor/phpunit.xml: fichero para test unitario
+    vendor/server.php: permite servir una web laravel sin necesidad de un servidor local (preferible trabajar con XAMPP, WAMPP,...)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------
+|ROUTES|
+--------
+
+    Laravel nos ayuda mucho a crear rutas amigables, generalmente se suele usar el archivo web.php,
+    pero también podríamos usar por ejemplo api.php si fueramos a implementar una api.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------
+|CONTROLLERS|
+-------------
+
+    En app/Http/Controllers/Auth tenemos controladores por defecto listos para usar.
+
+    Tenemos luego en Controllers a Controller.php (controler por defecto del framework Laravel).
+    Este controlador no es más que una clase Controller que hereda de un la clase BaseController.
+    Los futuros controladores que vayamos creando heredarán de la clase Controller.
+    Dentro de la carpeta Controllers podremos crear más carpetas para dentro tener nuestros Controllers
+    separados según sus funcionalidades.
+
+    Controller.php:
+
+    <?php
+
+    namespace App\Http\Controllers;
+
+    use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+    use Illuminate\Foundation\Bus\DispatchesJobs;
+    use Illuminate\Foundation\Validation\ValidatesRequests;
+    use Illuminate\Routing\Controller as BaseController;
+
+    class Controller extends BaseController
+    {
+        use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    }
+
+
+    namespace: Se usa para indicar el espacio de nombre de dicha clase, es decir, la carpeta de la que proviene la clase X.
+    Se suele utilizar para no generar conflictos cuando trabajamos en grupo y se crean clases con el mismo nombre pero estén en distintas carpetas.
+    En este caso se indica que usaremos las clases o archivos dentro de App\Http\Controllers.
+
+    use: se usa para importar clases que se encuentran en bibliotecas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------
+|ARTISAN|
+---------
+
+    - php artisan: muestra todos los comandos
+    - php artisan help: comandos básicos de Laravel
+    - php artisan list: comandos importantes (caché,
+      migraciones, make para generar códigos, rutas, vistas, ...)
+    - php artisan route:list: muestra todas las rutas que tenemos
+    - php artisan make:controller PruebasController: genera un controlador con dicho nombre
+    en C:\xampp\htdocs\cursoLARAVEL\app\Http\Controllers
+    - php artisan make:controller UsuarioController --resource: crea un controlador de tipo resource,
+      el cual nos genera dentro de la clase controlador una serie de métodos predeefinidos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------
+|MIDDLEWARE (filtro)|
+---------------------
+
+    Componente que permite filtrar peticiones HTTP.
+    Un middleware es una clase php que permite comprobar o hacer cierta lógica
+    antes de mostrar la página o la acción de un controlador. Con el middleware
+    aplicamos un filtro para decidir si se realiza la petición HTTP. Generalmente es
+    se usa para no sobrecargar la lógica de los controladores y por lo tanto, la App.
+
+    Cómo generar un middleware:
+    	- php artisan make:middleware TestYear
+    
+	Se crean en:
+		C:\xampp\htdocs\laravel\app\Http\Middleware
+    
+    Para que los middlewares entren en funcionamiento hay que definirlos en
+    el archivo Kernel.php, concrétamente dentro del array protected $routeMiddleware
+    donde deberemos añadir en nuestro ejemplo: 
+    	'testyear' => \App\Http\Middleware\TestYear::class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------
+|FORMULARIOS|
+-------------
+
+    Deben llevar todos {{csrf_field()}} para protegerlos contra ataques maliciosos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------
+|CONEXIÓN BASES DATOS|
+----------------------
+
+    Nos dirigimos al .env y modificamos los parámetros, estos luego al guardar se verán
+    reflejados en el app/config/database.php de nuestro proyecto.
+    En app/config/database.php, en el array connections tenemos todos los SGBD disponibles para trabajar con laravel.
+    El código del archivo app/config/database.php adquiere los parámetros configurados en .env
+    Las diferencias entre .env y .env.example es que el .env se usa para trabajar en local y el .env.example en remoto,
+    es decir cuando queremos trabajar p. ej en equipo en github subiriamos el .env.example, nunca el .env.
+
+    Tenemos dos formas de tratar con los registros de las bases de datos, una es con el RAW SQL QUERY y otra con ELOQUENT ORM
+    	- RAW SQL QUERY: métodos estáticos de la interfaz DB para cada una de las instrucciones CRUD (DB::insert, DB::delete,...).
+    	- ELOQUENT ORM (Object Relational Mapping): ORM de Laravel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------
+|MIGRACIONES|
+-------------
+
+    Nos permiten versionar nuestra base de datos, de forma que si estamos desarrollando nuestro proyecto
+    y se nos ocurre modificar alguna tabla podremos hacerlo a través de las migraciones de forma
+    que si alguien quiere levantar nuestro proyecto en su máquina podrá tener todos esos cambios.
+    Es una forma muy segura y rápida de trabajar ya que nos suple de tener que estar creando ficheros .sql,
+    pasándoselos a nuestros compañeros, etc...
+    Existen algunas migraciones ya creadas por defecto en Laravel las cuales podremos encontrarlas en:
+        C:\xampp\htdocs\cursoLARAVEL\database\migrations
+
+    Para ver todos los archivos migrations creados (en la consola, en la columna ran se indica si está creada la tabla)
+    	- php artisan migrate:status
+
+
+    Crear migración:
+    	- php artisan make:migration create_usuarios_table --table=usuarios
+
+    Ahora veremos el .php de la migración en el directorio anterior con dos funciones:
+    	up() para crear la tabla y down() para borrarla
+
+    Blueprint es un esquema builder que nos va a generar la tabla. Para ello creamos los atributos de la tabla dentro del archivo .php
+
+
+    Ejecutar las migraciones (se correrán tanto la de los archivos que ya vienen por defecto como la creada por nosotros):
+    	- php artisan migrate
+
+
+    Revertir(a la acción anterior) migración:
+    	- php artisan migrate:rollback
+
+
+    Si añadimos un nuevo campo a la tabla desde el archivo .php, para que la actualice hacemos:
+    	- php artisan migrate:refresh
+
+
+    Para eliminar todos las tablas correspondientes a los archivos migrations:
+    	- php artisan migrate:reset (para volver a crear las tablas hacemos php artisan migrate)
+
+
+    Si queremos añadir una columna nueva a una tabla existente, creamos un archivo .php de migrations con un nuevo nombre
+    pero indicándile el mismo nombre de la tabla y luego dentro de la función up indicamos $table->string('seccion);
+    Y al hacer php artisan migrate se añadirá dicho campo a dicha tabla.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------
+|SEEDERS |
+----------
+
+    (seed es semilla: sembrar)
+    Nos permite definir un script para cuando necesitemos rellenar las tablas. Se suelen usar sobre todo
+    al inicio del desarrollo de una app.
+
+    Crear un seed:
+    	- php artisan make:seed frutas_seed
+
+    Aparecerá en: C:\xampp\htdocs\laravel\database\seeds
+
+    Ejecutar el seed:
+    	- php artisan db:seed --class=frutas_seed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------
+|INTEGRACIÓN BOOTSTRAP|
+-----------------------
+
+    Dos formas:
+    - Online: En las vistas .blade.php copiamos tanto la etiqueta link en el head como los script de JS al final de body
+    - Descarga (nos permite modificar los estilos internos de Bootstrap): Vamos a la página oficial de Bootstrap en apartado de Download y descargamos el compiled css and js
+    (trae las carpetas css y js solamente, es decir solo lo básico) o el source files (trae muchas más carpetas y
+    dentro de dist vendrá el css y js, trayendo ejemplos etc dentro de la carpeta docs/version/examples).
+    Si descargamos la versión fácil (2 carpetas), las podremos incluir dentro de public/assets, tras ello,
+    para incluir estos estilos de bootstrap dentro de estas 2 carpetas en cualquier vista de nuestra proyecto laravel
+    tendremos que incluir <link href="{{asset('css/bootstrap.min.css')}} rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------
+|BLADE|
+-------
+
+    Es un motor (constructor) de plantillas que viene con Laravel y sirve para crear vistas de forma + sencilla y limpia
+    reutilizando código, creando código + limpio evitando el uso de etiquetas php y html (en la medida de lo posible)
+    y modularizando (templates, partials,...). En una página web solemos tener partes (header,sidebar,footer) que no
+    suelen cambiar su contenido, para ello se usan las plantillas o layouts. Estos layouts se suelen crear dentro de
+    views como views/layouts y ahí definiremos la plantilla o estructura básica o general de nuestra web.
+    Estas partes que nunca cambian en una web (el footer por ejemplo) se suelen definir en la misma plantilla de layouts.

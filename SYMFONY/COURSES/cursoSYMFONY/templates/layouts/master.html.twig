@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Inicio sería el nombre del título por defecto, pero esto cambiará dinámicamente en función de lo que
+    le vayamos indicando en las vistas que extiendan esta plantilla maestra #}
+    <title>{% block titulo %} Titulo por defecto {% endblock %}</title>
+</head>
+<body>
+
+    <div id="header">
+        {% block cabecera %} 
+            {# Este h1 es el contenido poir defecto, que será también modificable de las vistas que hereden de esta #}
+            <h1>Cabecera por defecto</h1>
+        {% endblock %}
+    </div>
+
+    <section id="content">
+        {% block contenido %}
+            <p>Contenido por defecto</p>
+        {% endblock %}
+    </section>
+
+    <footer id="footer">
+        Footer por defecto
+    </footer>
+    
+</body>
+</html>

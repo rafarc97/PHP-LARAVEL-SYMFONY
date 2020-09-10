@@ -1,0 +1,3 @@
+La inyección SQL podemos evitarla con la función mysqli_real_escape_string() ó con consultas preparadas.
+De la 2ª forma en consultas tipo INSERT son + rápidas y eficientes pero tenemos que escribir más código
+ y conocer nuevas funciones.

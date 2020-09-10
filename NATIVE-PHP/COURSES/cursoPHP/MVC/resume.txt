@@ -1,0 +1,3 @@
+Model: Aquí van las clases y métodos que comunican con la BBDD
+View: Todo lo referente a la interfaz que mostrará la info del usuario
+Controller: Intermediario entre la vista y el controlador
